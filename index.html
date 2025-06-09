@@ -3,186 +3,238 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generate 2FA Code</title>
+    <title>2FA Retro Authenticator</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="icon" href="https://github.com/FighterTunnel/rdp/raw/main/image/ft_logo.ico" type="image/x-icon">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --retro-bg: #222831;
+            --retro-panel: #393e46;
+            --retro-accent: #00fff5;
+            --retro-pixel: #ffde59;
+            --retro-text: #eeeeee;
+            --retro-btn: #00fff5;
+            --retro-btn-hover: #ffde59;
+            --retro-shadow: 0 0 0 4px #00fff5, 0 0 0 8px #393e46;
+            --retro-border: 4px solid #00fff5;
+        }
         body {
-            background: linear-gradient(135deg, #2c3e50, #4c5c68);
+            background: var(--retro-bg);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
-            padding: 20px;
-            font-family: 'Roboto', sans-serif;
-            transition: background 0.5s ease;
-            color: #ecf0f1;
+            font-family: 'Press Start 2P', cursive;
+            color: var(--retro-text);
             margin: 0;
+            transition: background 0.3s, color 0.3s;
         }
-        .container {
-            background-color: #ffffff;
-            padding: 60px;
-            border-radius: 20px;
-            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5);
-            max-width: 600px;
+        .retro-container {
+            background: var(--retro-panel);
+            border: var(--retro-border);
+            box-shadow: var(--retro-shadow);
+            border-radius: 16px;
+            padding: 40px 20px 24px 20px;
+            max-width: 400px;
             width: 100%;
-            margin: 30px 0;
             text-align: center;
-            color: #333;
+            position: relative;
         }
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-        }
-        .logo {
-            max-width: 110px;
-            margin-right: 40px;
-            width: 100%;
-            height: auto;
-        }
-        .header h1 {
-            font-size: 3rem;
-            margin: 0;
-            color: #333;
-            animation: fadeIn 1s ease-in-out;
-            font-weight: bold;
-        }
-        .footer-text {
-            margin-top: 30px;
-            color: #6c757d;
-            font-size: 1rem;
-            text-align: center;
-        }
-        .icon {
-            width: 30px;
-            height: 30px;
-            fill: #6c757d;
-            margin-right: 10px;
-        }
-        .btn-custom {
-            padding: 15px 30px;
+        .retro-title {
+            color: var(--retro-accent);
             font-size: 1.2rem;
-            background-color: #34495e;
-            color: #ffffff;
-            border: none;
-            border-radius: 50px;
-            transition: background-color 0.3s ease, transform 0.3s ease;
+            margin-bottom: 18px;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 0 #000, 0 0 8px var(--retro-accent);
         }
-        .btn-custom:hover {
-            background-color: #34495e;
-            color: #ffffff;
-            transform: scale(1.05);
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        .retro-logo {
+            font-size: 2.5rem;
+            color: var(--retro-pixel);
+            margin-bottom: 12px;
+            text-shadow: 2px 2px 0 #000, 0 0 8px var(--retro-pixel);
         }
-        .btn-custom i {
-            margin-right: 8px;
+        .form-label {
+            color: var(--retro-accent);
+            font-size: 0.8rem;
+            margin-bottom: 6px;
         }
         .form-control-lg {
-            font-size: 1.25rem;
-            padding: 1rem;
-            background-color: #f0f0f0;
-            color: #333;
-            border: 1px solid #ccc;
+            font-family: 'Press Start 2P', cursive;
+            border: 2.5px solid var(--retro-accent);
+            border-radius: 8px;
+            background: #23272f;
+            color: var(--retro-text);
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+            box-shadow: 2px 2px 0 #000;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        .form-control-lg:focus {
+            border-color: var(--retro-pixel);
+            background: #23272f;
+            color: var(--retro-text);
+            box-shadow: 0 0 0 2px var(--retro-pixel);
         }
-        .btn-outline-secondary {
-            border-color: #767974;
-            color: #34495e;
-            transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
-            border-radius: 140px;
+        .btn-retro {
+            font-family: 'Press Start 2P', cursive;
+            background: var(--retro-btn);
+            color: #222;
+            border: 2.5px solid #000;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            padding: 10px 0;
+            width: 100%;
+            margin-top: 8px;
+            box-shadow: 2px 2px 0 #000;
+            transition: background 0.2s, color 0.2s;
         }
-        .btn-outline-secondary:hover {
-            background-color: #34495e;
-            color: #ecf0f1;
-            transform: scale(1.1);
+        .btn-retro:hover {
+            background: var(--retro-btn-hover);
+            color: #222;
         }
-        .swal2-container {
-            margin-top: 70px;
+        .alert-secondary {
+            background: #23272f;
+            border: 2px solid var(--retro-accent);
+            color: var(--retro-pixel);
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-family: 'Press Start 2P', cursive;
+            margin-top: 12px;
         }
-        .swal2-toast {
-            animation: slideInRight 1s ease-out;
+        .alert-danger {
+            background: #23272f;
+            border: 2px solid #ff3860;
+            color: #ff3860;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-family: 'Press Start 2P', cursive;
+            margin-top: 12px;
         }
-        @keyframes slideInRight {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
+        .footer-text {
+            color: var(--retro-pixel);
+            font-size: 0.7rem;
+            margin-top: 18px;
+            text-shadow: 1px 1px 0 #000;
+        }
+        .socials {
+            margin-top: 18px;
+        }
+        .socials a {
+            margin: 0 8px;
+            color: var(--retro-accent);
+            font-size: 1.3rem;
+            transition: color 0.2s;
+            text-shadow: 1px 1px 0 #000;
+        }
+        .socials a:hover {
+            color: var(--retro-pixel);
+        }
+        .mode-toggle {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: var(--retro-btn);
+            color: #222;
+            border: 2px solid #000;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            padding: 4px 12px;
+            cursor: pointer;
+            font-family: 'Press Start 2P', cursive;
+            box-shadow: 2px 2px 0 #000;
+            transition: background 0.2s, color 0.2s;
+        }
+        .mode-toggle:hover {
+            background: var(--retro-btn-hover);
+        }
+        /* Light mode */
+        body.light-mode {
+            --retro-bg: #f8f8f8;
+            --retro-panel: #fffbe7;
+            --retro-accent: #ff3860;
+            --retro-pixel: #222831;
+            --retro-text: #222831;
+            --retro-btn: #ffde59;
+            --retro-btn-hover: #ff3860;
+            --retro-shadow: 0 0 0 4px #ffde59, 0 0 0 8px #ff3860;
+            --retro-border: 4px solid #ffde59;
+        }
+        body.light-mode .form-control-lg {
+            background: #fff;
+            color: #222831;
+        }
+        body.light-mode .form-control-lg:focus {
+            background: #fff;
+            color: #222831;
+        }
+        body.light-mode .alert-secondary {
+            background: #fffbe7;
+            color: #ff3860;
+            border-color: #ff3860;
+        }
+        body.light-mode .alert-danger {
+            background: #fffbe7;
+            color: #ff3860;
+            border-color: #ff3860;
+        }
+        @media (max-width: 500px) {
+            .retro-container {
+                padding: 18px 2px 12px 2px;
             }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-        @media (max-width: 576px) {
-            .header {
-                flex-direction: column;
-            }
-            .logo {
-                margin-right: 0;
-                margin-bottom: 20px;
-            }
-            .header h1 {
-                font-size: 2.5rem;
+            .retro-title {
+                font-size: 0.9rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container position-relative">
-        <div class="header">
-            <img src="./2fa.png" alt="Logo" class="logo">
-            <h1 class="text-black mb-0">Rexn</h1>
+    <div class="retro-container">
+        <button class="mode-toggle" id="modeToggle" title="Toggle dark/light mode">
+            <i class="fas fa-moon"></i>
+        </button>
+        <div class="retro-logo">
+            <i class="fas fa-gamepad"></i>
         </div>
-        <h2 class="text-center mb-4">Generate 2FA Code</h2>
-        <div class="position-absolute" style="top: 25px; right: 50px;">
-            <span style="width: 16px; height: 16px; background-color: #ff5f56; border-radius: 50%; display: inline-block; margin-right: 6px;"></span>
-            <span style="width: 16px; height: 16px; background-color: #ffbd2e; border-radius: 50%; display: inline-block; margin-right: 6px;"></span>
-            <span style="width: 16px; height: 16px; background-color: #27c93f; border-radius: 50%; display: inline-block;"></span>
-        </div>
+        <div class="retro-title">2FA RETRO AUTHENTICATOR</div>
         <form id="generateCodeForm" class="needs-validation" novalidate>
-            <div class="mb-3">
-                <label for="secret" class="form-label text-start w-100">Secret:</label>
-                <input type="text" class="form-control form-control-lg" id="secret" name="secret" required>
+            <div class="mb-2">
+                <label for="secret" class="form-label">SECRET:</label>
+                <input type="text" class="form-control form-control-lg" id="secret" name="secret" required autocomplete="off">
                 <div class="invalid-feedback">
                     Please enter a secret.
                 </div>
             </div>
-            <button type="submit" class="btn btn-custom w-100">
-                <i class="fas fa-key"></i> Generate Code
+            <button type="submit" class="btn-retro">
+                <i class="fas fa-key"></i> GENERATE CODE
             </button>
         </form>
-        <div id="result" class="result mt-3"></div>
-        <div class="mt-4">
-            <p class="text-black mb-0">Two-Factor Authentication (2FA) menambahkan lapisan keamanan ekstra ke akun Anda dengan meminta kode unik selain kata sandi Anda. Pastikan untuk menjaga kerahasiaan kode ini.</p>
+        <div id="result" class="result"></div>
+        <div class="footer-text">
+            Two-Factor Authentication (2FA) menambahkan lapisan keamanan ekstra ke akun Anda dengan meminta kode unik selain kata sandi Anda.<br>Jaga kerahasiaan kode ini!
         </div>
-        <div class="mt-4">
-            <a href="https://t.me/yha_bot" target="_blank" class="me-4" style="text-decoration: none;">
-                <i class="fab fa-telegram fa-2x" style="color: #34495e;"></i>
-            </a>
-            <a href="https://instagram.com/bhoikfost_yahya" target="_blank" class="me-4" style="text-decoration: none;">
-                <i class="fab fa-instagram fa-2x" style="color: #34495e;"></i>
-            </a>
-            <a href="https://wa.me/6281584099035" target="_blank" class="me-4" style="text-decoration: none;">
-                <i class="fab fa-whatsapp fa-2x" style="color: #34495e;"></i>
-            </a>
+        <div class="socials">
+            <a href="https://t.me/yha_bot" target="_blank"><i class="fab fa-telegram"></i></a>
+            <a href="https://instagram.com/bhoikfost_yahya" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="https://wa.me/6281584099035" target="_blank"><i class="fab fa-whatsapp"></i></a>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        // Dark/Light mode toggle
+        const modeToggle = document.getElementById('modeToggle');
+        const body = document.body;
+        let isLight = false;
+        modeToggle.addEventListener('click', () => {
+            isLight = !isLight;
+            body.classList.toggle('light-mode', isLight);
+            modeToggle.innerHTML = isLight
+                ? '<i class="fas fa-sun"></i>'
+                : '<i class="fas fa-moon"></i>';
+        });
+
+        // Form validation & fetch
         (function() {
             'use strict';
             window.addEventListener('load', function() {
@@ -220,29 +272,26 @@
                 const data = await response.json();
                 if (data.code) {
                     resultDiv.innerHTML = `
-                        <div class="alert alert-secondary d-flex justify-content-between align-items-center p-3 animate__animated animate__fadeIn">
-                            <span class="fs-4 fw-bold">Generated Code: ${data.code}</span>
-                            <button class="btn btn-outline-secondary btn-lg ms-3" data-bs-toggle="tooltip" data-bs-placement="top" title="Copy" onclick="copyToClipboard('${data.code}')">
-                                <i class="fas fa-copy"></i> Copy
+                        <div class="alert alert-secondary d-flex justify-content-between align-items-center p-3">
+                            <span style="font-size:1.1rem;">CODE: <b>${data.code}</b></span>
+                            <button class="btn btn-retro ms-3" title="Copy" onclick="copyToClipboard('${data.code}')">
+                                <i class="fas fa-copy"></i>
                             </button>
                         </div>`;
                     Swal.fire({
                         toast: true,
                         position: 'top-end',
                         icon: 'success',
-                        title: 'Code generated successfully!',
+                        title: 'Code generated!',
                         showConfirmButton: false,
-                        timer: 1500,
-                        customClass: {
-                            popup: 'swal2-toast'
-                        }
+                        timer: 1500
                     });
                 } else {
-                    resultDiv.innerHTML = `<div class="alert alert-danger p-3 animate__animated animate__shakeX">Error: ${data.error}</div>`;
+                    resultDiv.innerHTML = `<div class="alert alert-danger p-3">Error: ${data.error}</div>`;
                 }
                 resultDiv.scrollIntoView({ behavior: 'smooth' });
             } catch (error) {
-                resultDiv.innerHTML = `<div class="alert alert-danger p-3 animate__animated animate__shakeX">${error.message}</div>`;
+                resultDiv.innerHTML = `<div class="alert alert-danger p-3">${error.message}</div>`;
             }
         });
 
@@ -252,12 +301,9 @@
                     toast: true,
                     position: 'top-end',
                     icon: 'success',
-                    title: 'Code copied to clipboard!',
+                    title: 'Code copied!',
                     showConfirmButton: false,
-                    timer: 700,
-                    customClass: {
-                        popup: 'swal2-toast'
-                    }
+                    timer: 700
                 });
             }, (err) => {
                 console.error('Failed to copy text: ', err);
