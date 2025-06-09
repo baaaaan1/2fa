@@ -141,8 +141,8 @@
 <body>
     <div class="container position-relative">
         <div class="header">
-            <img src="./ftstoresz.png" alt="Logo" class="logo">
-            <h1 class="text-black mb-0">FTSTORESZ</h1>
+            <img src="./2fa.png" alt="Logo" class="logo">
+            <h1 class="text-black mb-0">Rexn</h1>
         </div>
         <h2 class="text-center mb-4">Generate 2FA Code</h2>
         <div class="position-absolute" style="top: 25px; right: 50px;">
@@ -206,7 +206,7 @@
             resultDiv.innerHTML = '';
 
             try {
-                const response = await fetch(`/generatecode?secret=${encodeURIComponent(secret)}`, {
+                const response = await fetch(`/api/generatecode?secret=${encodeURIComponent(secret)}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json'
