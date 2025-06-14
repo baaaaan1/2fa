@@ -53,24 +53,13 @@
         });
 
         // Form validation & fetch
-        (function() {
-            'use strict';
-            window.addEventListener('load', function() {
-                var forms = document.getElementsByClassName('needs-validation');
-                Array.prototype.filter.call(forms, function(form) {
-                    form.addEventListener('submit', function(event) {
-                        if (form.checkValidity() === false) {
-                            event.preventDefault();
-                            event.stopPropagation();
-                        }
-                        form.classList.add('was-validated');
-                    }, false);
-                });
-            }, false);
-        })();
-
         document.getElementById('generateCodeForm').addEventListener('submit', async (event) => {
             event.preventDefault();
+            const form = event.target;
+            form.classList.add('was-validated');
+            if (!form.checkValidity()) {
+                return;
+            }
             const secret = document.getElementById('secret').value.trim();
             const resultDiv = document.getElementById('result');
             resultDiv.innerHTML = '';
@@ -83,19 +72,16 @@
                     }
                 });
 
-                if (!response.ok) {
-                    throw new Error('Error: Invalid or missing secret');
-                }
-
                 const data = await response.json();
-                if (data.code) {
+                if (response.ok && data.code) {
                     resultDiv.innerHTML = `
                         <div class="alert alert-secondary d-flex justify-content-between align-items-center p-3">
                             <span style="font-size:1.1rem;">CODE: <b>${data.code}</b></span>
-                            <button class="btn btn-retro ms-3" title="Copy" onclick="copyToClipboard('${data.code}')">
+                            <button class="btn btn-retro ms-3" title="Copy" id="copyBtn">
                                 <i class="fas fa-copy"></i>
                             </button>
                         </div>`;
+                    document.getElementById('copyBtn').addEventListener('click', () => copyToClipboard(data.code));
                     Swal.fire({
                         toast: true,
                         position: 'top-end',
@@ -105,7 +91,7 @@
                         timer: 1500
                     });
                 } else {
-                    resultDiv.innerHTML = `<div class="alert alert-danger p-3">Error: ${data.error}</div>`;
+                    resultDiv.innerHTML = `<div class="alert alert-danger p-3">Error: ${data.error || 'Unknown error'}</div>`;
                 }
                 resultDiv.scrollIntoView({ behavior: 'smooth' });
             } catch (error) {
@@ -113,6 +99,7 @@
             }
         });
 
+        // Fungsi copy global
         function copyToClipboard(text) {
             navigator.clipboard.writeText(text).then(() => {
                 Swal.fire({

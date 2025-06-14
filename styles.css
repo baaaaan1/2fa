@@ -9,6 +9,7 @@
     --retro-shadow: 0 0 0 4px #00fff5, 0 0 0 8px #393e46;
     --retro-border: 4px solid #00fff5;
 }
+
 body {
     background: var(--retro-bg);
     min-height: 100vh;
@@ -20,6 +21,18 @@ body {
     margin: 0;
     transition: background 0.3s, color 0.3s;
 }
+
+.light-mode {
+    --retro-bg: #f3f3f3;
+    --retro-panel: #fffbe6;
+    --retro-accent: #222831;
+    --retro-text: #222831;
+    --retro-btn: #ffde59;
+    --retro-btn-hover: #00fff5;
+    --retro-shadow: 0 0 0 4px #ffde59, 0 0 0 8px #fffbe6;
+    --retro-border: 4px solid #ffde59;
+}
+
 .retro-container {
     background: var(--retro-panel);
     border: var(--retro-border);
@@ -31,10 +44,97 @@ body {
     text-align: center;
     position: relative;
 }
+
+.retro-logo {
+    font-size: 2.5rem;
+    color: var(--retro-pixel);
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 0 #000, 0 0 8px var(--retro-pixel);
+}
+
 .retro-title {
     color: var(--retro-accent);
     font-size: 1.2rem;
     margin-bottom: 18px;
     letter-spacing: 2px;
     text-shadow: 2px 2px 0 #000, 0 0 8px var(--retro-accent);
+}
+
+.btn-retro {
+    background: var(--retro-btn);
+    color: #222831;
+    border: 2px solid var(--retro-accent);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 1rem;
+    padding: 8px 18px;
+    margin-top: 10px;
+    box-shadow: 2px 2px 0 #000, 0 0 8px var(--retro-btn);
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+
+.btn-retro:hover, .btn-retro:focus {
+    background: var(--retro-btn-hover);
+    color: #222831;
+    box-shadow: 2px 2px 0 #000, 0 0 12px var(--retro-btn-hover);
+}
+
+.mode-toggle {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    background: transparent;
+    border: none;
+    color: var(--retro-accent);
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: color 0.2s;
+    z-index: 2;
+}
+
+.mode-toggle:hover {
+    color: var(--retro-pixel);
+}
+
+.result {
+    margin-top: 18px;
+    min-height: 48px;
+}
+
+.footer-text {
+    font-size: 0.7rem;
+    color: var(--retro-accent);
+    margin-top: 24px;
+    opacity: 0.8;
+    line-height: 1.6;
+}
+
+input.form-control-lg {
+    font-size: 1rem;
+    font-family: inherit;
+    background: #23272f;
+    color: var(--retro-text);
+    border: 2px solid var(--retro-accent);
+    border-radius: 8px;
+    box-shadow: 1px 1px 0 #000;
+    transition: border 0.2s, background 0.2s;
+}
+
+input.form-control-lg:focus {
+    border-color: var(--retro-pixel);
+    background: #2d323c;
+    color: var(--retro-text);
+}
+
+@media (max-width: 500px) {
+    .retro-container {
+        padding: 18px 4px 14px 4px;
+        max-width: 98vw;
+    }
+    .retro-title {
+        font-size: 1rem;
+    }
+    .footer-text {
+        font-size: 0.6rem;
+    }
 }
