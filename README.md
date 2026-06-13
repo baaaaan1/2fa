@@ -72,21 +72,68 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## 📦 Deployment to Vercel
 
-1. Push your code to GitHub
+### 1. Push your code to GitHub
 
-2. Connect your repository to Vercel:
-   - Go to [vercel.com](https://vercel.com)
-   - Import your GitHub repository
-   - Configure environment variables:
-     - `NEXTAUTH_URL`: Your production URL
-     - `NEXTAUTH_SECRET`: Random secret (use `openssl rand -base64 32`)
-     - `ENCRYPTION_KEY`: Minimum 32 characters
-     - OAuth credentials (if using private accounts)
-   - For production, use PostgreSQL instead of SQLite:
-     - Add a PostgreSQL database (Vercel Postgres or external)
-     - Update `DATABASE_URL` in environment variables
+```bash
+git add .
+git commit -m "Initial commit"
+git push origin main
+```
 
-3. Deploy!
+### 2. Set up PostgreSQL Database
+
+Vercel requires PostgreSQL for production (SQLite doesn't work in serverless):
+
+**Option A: Vercel Postgres (Recommended)**
+- Go to your Vercel project dashboard
+- Navigate to Storage → Create Database → Vercel Postgres
+- Follow the setup wizard
+- Vercel will automatically set `POSTGRES_URL` environment variable
+
+**Option B: External PostgreSQL**
+- Use a service like Supabase, Railway, or AWS RDS
+- Get your connection string
+
+### 3. Configure Environment Variables
+
+In Vercel Dashboard → Settings → Environment Variables, add:
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `NEXTAUTH_URL` | Your production URL | `https://your-app.vercel.app` |
+| `NEXTAUTH_SECRET` | Random secret | Run: `openssl rand -base64 32` |
+| `ENCRYPTION_KEY` | AES encryption key | Min 32 characters |
+| `DATABASE_URL` | PostgreSQL connection | Provided by Vercel Postgres |
+| `GOOGLE_CLIENT_ID` | Optional OAuth | From Google Cloud Console |
+| `GOOGLE_CLIENT_SECRET` | Optional OAuth | From Google Cloud Console |
+| `GITHUB_CLIENT_ID` | Optional OAuth | From GitHub Settings |
+| `GITHUB_CLIENT_SECRET` | Optional OAuth | From GitHub Settings |
+
+### 4. Generate NextAuth Secret
+
+```bash
+openssl rand -base64 32
+```
+
+### 5. Deploy!
+
+- Connect your GitHub repo to Vercel
+- Vercel will auto-detect Next.js
+- Click Deploy
+- After first deploy, run database migration in Vercel Functions:
+  - Go to Vercel Dashboard → Your Project
+  - Settings → Functions → Enable Prisma
+  - Or use Vercel CLI: `vercel env pull` then `npx prisma db push`
+
+### 6. Post-Deployment
+
+After deploying, verify:
+- ✅ App loads without errors
+- ✅ Dark/Light mode toggle works
+- ✅ Guest mode generates codes
+- ✅ OAuth sign-in works (if configured)
+- ✅ Secrets are saved and encrypted
+- ✅ QR codes generate correctly
 
 ## 🔒 Security Considerations
 

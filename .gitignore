@@ -1,18 +1,15 @@
 ```
 # Dependencies
 node_modules/
-.pnpm-store/
-
-# Build outputs
-.next/
-dist/
-build/
-out/
 
 # Environment variables
 .env.local
-.env.production
-.env.development
+.env.*
+
+# Build outputs
+dist/
+build/
+.next/
 
 # Logs
 *.log
@@ -21,13 +18,28 @@ out/
 .DS_Store
 Thumbs.db
 
-# IDE files
+# Editor files
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# Coverage
+# Python specific
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Coverage reports
 coverage/
-.nyc_output/
+htmlcov/
+
+# Temporary files
+*.tmp
+*.temp
 ```
