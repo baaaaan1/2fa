@@ -3,117 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2FA Authenticator</title>
+    <title>2FA Authenticator - Secure & Open Source</title>
+    <meta name="description" content="Free and open-source 2FA authenticator with dark/light mode, QR scanning, and secure authentication.">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/mdi:shield-key.svg">
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="retro-container">
-        <button class="mode-toggle" id="modeToggle" title="Toggle dark/light mode">
-            <i class="fas fa-moon"></i>
-        </button>
-        <div class="retro-logo">
-            <i class="fas fa-gamepad"></i>
-        </div>
-        <div class="retro-title">2FA AUTHENTICATOR</div>
-        <form id="generateCodeForm" class="needs-validation" novalidate>
-            <div class="mb-2">
-                <label for="secret" class="form-label">SECRET:</label>
-                <input type="text" class="form-control form-control-lg" id="secret" name="secret" required autocomplete="off">
-                <div class="invalid-feedback">
-                    Please enter a secret.
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-shield-alt"></i> 2FA Authenticator
+            </a>
+            <div class="d-flex align-items-center gap-3">
+                <button class="mode-toggle" id="modeToggle" title="Toggle dark/light mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div id="authSection">
+                    <button class="btn btn-login" id="loginBtn" title="Login">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
+                    <div class="user-info d-none" id="userInfo">
+                        <span id="userEmail"></span>
+                        <button class="btn btn-logout" id="logoutBtn" title="Logout">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
-            <button type="submit" class="btn-retro">
-                <i class="fas fa-key"></i> GENERATE CODE
-            </button>
-        </form>
-        <div id="result" class="result"></div>
-        <div class="footer-text">
-            2FA (Two-Factor Authentication) menjaga akun Anda tetap aman dengan kode unik yang selalu berubah.<br>
-            Jangan bagikan kode ini ke siapa pun!
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <div class="retro-container">
+            <div class="retro-logo">
+                <i class="fas fa-shield-halved"></i>
+            </div>
+            <div class="retro-title">2FA AUTHENTICATOR</div>
+            
+            <!-- Account Type Selector -->
+            <div class="account-selector mb-3">
+                <div class="btn-group w-100" role="group">
+                    <input type="radio" class="btn-check" name="accountType" id="guestMode" autocomplete="off" checked>
+                    <label class="btn btn-account" for="guestMode">
+                        <i class="fas fa-user-secret"></i> Guest Mode
+                    </label>
+                    <input type="radio" class="btn-check" name="accountType" id="privateMode" autocomplete="off">
+                    <label class="btn btn-account" for="privateMode">
+                        <i class="fas fa-user-lock"></i> Private Account
+                    </label>
+                </div>
+            </div>
+
+            <!-- Secret Input Section -->
+            <form id="generateCodeForm" class="needs-validation" novalidate>
+                <div class="mb-3">
+                    <label for="secret" class="form-label">
+                        <i class="fas fa-key"></i> SECRET KEY:
+                    </label>
+                    <div class="input-group">
+                        <input type="text" class="form-control form-control-lg" id="secret" name="secret" 
+                               placeholder="Enter Base32 secret or paste from clipboard" 
+                               required autocomplete="off" spellcheck="false">
+                        <button class="btn btn-retro btn-paste" type="button" id="pasteBtn" title="Paste from clipboard">
+                            <i class="fas fa-paste"></i>
+                        </button>
+                    </div>
+                    <div class="invalid-feedback">
+                        Please enter a valid Base32 secret.
+                    </div>
+                </div>
+
+                <!-- QR Code Options -->
+                <div class="qr-section mb-3">
+                    <button type="button" class="btn btn-retro btn-qr w-100" id="qrScanBtn">
+                        <i class="fas fa-qrcode"></i> Scan QR Code
+                    </button>
+                    <button type="button" class="btn btn-retro btn-qr w-100 d-none" id="qrGenerateBtn">
+                        <i class="fas fa-qrcode"></i> Generate QR for Setup
+                    </button>
+                </div>
+
+                <button type="submit" class="btn btn-retro btn-generate w-100">
+                    <i class="fas fa-bolt"></i> GENERATE CODE
+                </button>
+            </form>
+
+            <!-- QR Scanner Modal -->
+            <div class="qr-scanner-modal d-none" id="qrScannerModal">
+                <div class="qr-scanner-content">
+                    <div class="qr-scanner-header">
+                        <h5><i class="fas fa-camera"></i> Scan QR Code</h5>
+                        <button class="btn-close" id="closeScanner"></button>
+                    </div>
+                    <div class="qr-video-container">
+                        <video id="qrVideo"></video>
+                    </div>
+                    <div class="qr-result" id="qrResult"></div>
+                </div>
+            </div>
+
+            <!-- QR Generator Modal -->
+            <div class="qr-generator-modal d-none" id="qrGeneratorModal">
+                <div class="qr-generator-content">
+                    <div class="qr-generator-header">
+                        <h5><i class="fas fa-qrcode"></i> Setup QR Code</h5>
+                        <button class="btn-close" id="closeGenerator"></button>
+                    </div>
+                    <div class="qr-code-display" id="qrCodeDisplay"></div>
+                    <p class="qr-instructions">Scan this QR code with your authenticator app</p>
+                    <div class="secret-display" id="secretDisplay"></div>
+                </div>
+            </div>
+
+            <!-- Result Display -->
+            <div id="result" class="result"></div>
+
+            <!-- Saved Accounts (Private Mode Only) -->
+            <div class="saved-accounts d-none" id="savedAccounts">
+                <h6 class="accounts-title"><i class="fas fa-save"></i> Saved Accounts</h6>
+                <div id="accountsList"></div>
+            </div>
+
+            <div class="footer-text">
+                <p><i class="fas fa-lock"></i> Your data is secure - All processing happens client-side</p>
+                <p>2FA (Two-Factor Authentication) keeps your accounts safe with constantly changing unique codes.</p>
+                <p class="foss-notice"><i class="fas fa-heart"></i> FOSS - Free and Open Source Software</p>
+            </div>
         </div>
     </div>
+
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-        // Dark/Light mode toggle
-        const modeToggle = document.getElementById('modeToggle');
-        const body = document.body;
-        let isLight = false;
-        modeToggle.addEventListener('click', () => {
-            isLight = !isLight;
-            body.classList.toggle('light-mode', isLight);
-            modeToggle.innerHTML = isLight
-                ? '<i class="fas fa-sun"></i>'
-                : '<i class="fas fa-moon"></i>';
-        });
-
-        // Form validation & fetch
-        document.getElementById('generateCodeForm').addEventListener('submit', async (event) => {
-            event.preventDefault();
-            const form = event.target;
-            form.classList.add('was-validated');
-            if (!form.checkValidity()) {
-                return;
-            }
-            const secret = document.getElementById('secret').value.trim();
-            const resultDiv = document.getElementById('result');
-            resultDiv.innerHTML = '';
-
-            try {
-                const response = await fetch(`/api/generatecode?secret=${encodeURIComponent(secret)}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                const data = await response.json();
-                if (response.ok && data.code) {
-                    resultDiv.innerHTML = `
-                        <div class="alert alert-secondary d-flex justify-content-between align-items-center p-3">
-                            <span style="font-size:1.1rem;">CODE: <b>${data.code}</b></span>
-                            <button class="btn btn-retro ms-3" title="Copy" id="copyBtn">
-                                <i class="fas fa-copy"></i>
-                            </button>
-                        </div>`;
-                    document.getElementById('copyBtn').addEventListener('click', () => copyToClipboard(data.code));
-                    Swal.fire({
-                        toast: true,
-                        position: 'top-end',
-                        icon: 'success',
-                        title: 'Code generated!',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                } else {
-                    resultDiv.innerHTML = `<div class="alert alert-danger p-3">Error: ${data.error || 'Unknown error'}</div>`;
-                }
-                resultDiv.scrollIntoView({ behavior: 'smooth' });
-            } catch (error) {
-                resultDiv.innerHTML = `<div class="alert alert-danger p-3">${error.message}</div>`;
-            }
-        });
-
-        // Fungsi copy global
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                Swal.fire({
-                    toast: true,
-                    position: 'top-end',
-                    icon: 'success',
-                    title: 'Code copied!',
-                    showConfirmButton: false,
-                    timer: 700
-                });
-            }, (err) => {
-                console.error('Failed to copy text: ', err);
-            });
-        }
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/minified/html5-qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="app.js"></script>
 </body>
 </html>
