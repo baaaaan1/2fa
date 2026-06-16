@@ -1,7 +1,34 @@
 {
-    "name": "generatecode-vercel",
-    "version": "1.0.0",
-    "dependencies": {
-      "otplib": "^12.0.1"
-    }
-  }
+  "name": "2fa-authenticator-foss",
+  "version": "2.0.0",
+  "description": "Free and Open Source 2FA Authenticator with dark/light mode, QR scanning, and secure authentication",
+  "main": "api/generatecode.js",
+  "scripts": {
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "keywords": [
+    "2fa",
+    "authenticator",
+    "totp",
+    "otp",
+    "security",
+    "foss",
+    "open-source"
+  ],
+  "author": "FOSS Community",
+  "license": "MIT",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "html5-qrcode": "^2.3.8",
+    "otplib": "^12.0.1",
+    "qrcode": "^1.5.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/2fa-authenticator"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/2fa-authenticator/issues"
+  },
+  "homepage": "https://github.com/yourusername/2fa-authenticator#readme"
+}
