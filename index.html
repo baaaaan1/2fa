@@ -3,145 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2FA Authenticator - Secure & Open Source</title>
-    <meta name="description" content="Free and open-source 2FA authenticator with dark/light mode, QR scanning, and secure authentication.">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/mdi:shield-key.svg">
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <title>2FA Authenticator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">
-                <i class="fas fa-shield-alt"></i> 2FA Authenticator
-            </a>
-            <div class="d-flex align-items-center gap-3">
-                <button class="mode-toggle" id="modeToggle" title="Toggle dark/light mode">
-                    <i class="fas fa-moon"></i>
-                </button>
-                <div id="authSection">
-                    <button class="btn btn-login" id="loginBtn" title="Login">
-                        <i class="fas fa-sign-in-alt"></i> Login
-                    </button>
-                    <div class="user-info d-none" id="userInfo">
-                        <span id="userEmail"></span>
-                        <button class="btn btn-logout" id="logoutBtn" title="Logout">
-                            <i class="fas fa-sign-out-alt"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
+    <div class="background-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
 
-    <div class="main-container">
-        <div class="retro-container">
-            <div class="retro-logo">
-                <i class="fas fa-shield-halved"></i>
-            </div>
-            <div class="retro-title">2FA AUTHENTICATOR</div>
+    <div class="container">
+        <div class="glass-card">
+            <h1 class="title"><span class="icon">🔐</span> 2FA Authenticator</h1>
             
-            <!-- Account Type Selector -->
-            <div class="account-selector mb-3">
-                <div class="btn-group w-100" role="group">
-                    <input type="radio" class="btn-check" name="accountType" id="guestMode" autocomplete="off" checked>
-                    <label class="btn btn-account" for="guestMode">
-                        <i class="fas fa-user-secret"></i> Guest Mode
-                    </label>
-                    <input type="radio" class="btn-check" name="accountType" id="privateMode" autocomplete="off">
-                    <label class="btn btn-account" for="privateMode">
-                        <i class="fas fa-user-lock"></i> Private Account
-                    </label>
+            <form id="generateCodeForm">
+                <div class="input-group">
+                    <label for="secret">Secret Key</label>
+                    <input type="text" id="secret" placeholder="Enter Base32 secret" required autocomplete="off">
+                    <button type="button" id="pasteBtn" title="Paste">📋</button>
                 </div>
-            </div>
-
-            <!-- Secret Input Section -->
-            <form id="generateCodeForm" class="needs-validation" novalidate>
-                <div class="mb-3">
-                    <label for="secret" class="form-label">
-                        <i class="fas fa-key"></i> SECRET KEY:
-                    </label>
-                    <div class="input-group">
-                        <input type="text" class="form-control form-control-lg" id="secret" name="secret" 
-                               placeholder="Enter Base32 secret or paste from clipboard" 
-                               required autocomplete="off" spellcheck="false">
-                        <button class="btn btn-retro btn-paste" type="button" id="pasteBtn" title="Paste from clipboard">
-                            <i class="fas fa-paste"></i>
-                        </button>
-                    </div>
-                    <div class="invalid-feedback">
-                        Please enter a valid Base32 secret.
-                    </div>
-                </div>
-
-                <!-- QR Code Options -->
-                <div class="qr-section mb-3">
-                    <button type="button" class="btn btn-retro btn-qr w-100" id="qrScanBtn">
-                        <i class="fas fa-qrcode"></i> Scan QR Code
-                    </button>
-                    <button type="button" class="btn btn-retro btn-qr w-100 d-none" id="qrGenerateBtn">
-                        <i class="fas fa-qrcode"></i> Generate QR for Setup
-                    </button>
-                </div>
-
-                <button type="submit" class="btn btn-retro btn-generate w-100">
-                    <i class="fas fa-bolt"></i> GENERATE CODE
-                </button>
+                
+                <button type="submit" class="btn-generate">Generate Code</button>
             </form>
 
-            <!-- QR Scanner Modal -->
-            <div class="qr-scanner-modal d-none" id="qrScannerModal">
-                <div class="qr-scanner-content">
-                    <div class="qr-scanner-header">
-                        <h5><i class="fas fa-camera"></i> Scan QR Code</h5>
-                        <button class="btn-close" id="closeScanner"></button>
-                    </div>
-                    <div class="qr-video-container">
-                        <video id="qrVideo"></video>
-                    </div>
-                    <div class="qr-result" id="qrResult"></div>
-                </div>
-            </div>
+            <div id="result"></div>
 
-            <!-- QR Generator Modal -->
-            <div class="qr-generator-modal d-none" id="qrGeneratorModal">
-                <div class="qr-generator-content">
-                    <div class="qr-generator-header">
-                        <h5><i class="fas fa-qrcode"></i> Setup QR Code</h5>
-                        <button class="btn-close" id="closeGenerator"></button>
-                    </div>
-                    <div class="qr-code-display" id="qrCodeDisplay"></div>
-                    <p class="qr-instructions">Scan this QR code with your authenticator app</p>
-                    <div class="secret-display" id="secretDisplay"></div>
-                </div>
-            </div>
-
-            <!-- Result Display -->
-            <div id="result" class="result"></div>
-
-            <!-- Saved Accounts (Private Mode Only) -->
-            <div class="saved-accounts d-none" id="savedAccounts">
-                <h6 class="accounts-title"><i class="fas fa-save"></i> Saved Accounts</h6>
-                <div id="accountsList"></div>
-            </div>
-
-            <div class="footer-text">
-                <p><i class="fas fa-lock"></i> Your data is secure - All processing happens client-side</p>
-                <p>2FA (Two-Factor Authentication) keeps your accounts safe with constantly changing unique codes.</p>
-                <p class="foss-notice"><i class="fas fa-heart"></i> FOSS - Free and Open Source Software</p>
-            </div>
+            <p class="footer">Your data stays on your device</p>
         </div>
     </div>
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/minified/html5-qrcode.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="app.js"></script>
 </body>
 </html>
